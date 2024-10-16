@@ -6,6 +6,100 @@ See online keynote(.md) [here](./docs/keynote.md).
 
 Keynote(.pptx) download link [here](https://pan.baidu.com/s/1NAZi_NWV3lNLi1rNXhJxhA?pwd=0702).
 
+## Experiments and Results
+
+
+
+
+
+### 1. Text-to-Image
+
+> We use the DDPM [1] sampler with 500 steps and a guidance scale of 7.5. Images are generated with 512×512 pixels. Models are used in half precision (float16).
+
+![](assets/result_pics/figure1.png)
+
+<div align="center">Figure 1: Text-to-image remote sensing image generation given prompts related to different disaster type. Prompt = f"A satellite image of town suffering from {disaster_type}", where disaster_type takes flooding, wildfire,hurricane,tornado,earthquake and volcanic eruption from left to right respectively. The model used from top to bottom are sd2,sdxl,sd3 and diffusionsat respectively.</div>
+
+More Varients (using different seeds only)
+
+![](assets/result_pics/figure1_1.png)
+
+![](assets/result_pics/figure1_2.png)
+
+### 2. Image-to-Image Translation
+
+> We use the DDPM [1] sampler with 500 steps and a guidance scale of 5.0. Images are generated with 512×512 pixels. Models are used in half precision (float16). The image editing method is SDEdit [2].
+
+
+
+
+
+![](assets/result_pics/figure2.png)
+
+<div align="center">Figure 2: Image-to-image remote sensing image generation given prompts related to different disaster type. From left to right, images are in the order of predicted pre-event image, ground truth pre-event image, ground truth post-event image and predicted post-event image. Pre-to-post prompt = f"A satellite image  after being affected by {disaster_type}" while post-to-pre prompt =f"A satellite image before being affected by {disaster_type}", where disaster_type takes flooding, wildfire,hurricane,tornado,earthquake and volcanic eruption from top to bottom respectively. All images are generated with sd2 while ground truth images are derived from xBD. We use guidingscale as 7.0 here.</div>
+
+More Varients (same seed with different guiding scale)
+
+![](assets/result_pics/figure2_1.png)
+
+<div align="center">(The same seed as above while guidingscale = 1.0)</div>
+
+![](assets/result_pics/figure2_2.png)
+
+<div align="center">(The same seed as above while guidingscale = 7.0)</div>
+
+### 3. Interpretation from Attention Map Visualization
+
+We use DaaM [3] to visualize how diffusion models understand prompt by visualizing the attention map. Here, we take flooding as an example.
+
+> We use the DDPM sampler with 500 steps and a guidance scale of 5.0. Images are generated with 512×512 pixels. Models are used in half precision (float16). The image editing method is SDEdit. All experiments are done on sd2.
+
+#### Detailed Desctiption (text-to-image)
+
+![](assets/result_pics/figure3.png)
+
+![](assets/result_pics/figure3_detailed.png)
+
+<div align="center">Prompt=" A satellite image reveals a devastating flood,with waterlogged streets and houses, and patches of greenery emerging amidst the submerged landscape." visualized_word=["satellite image","reveals","devastating","flood","waterlogged"] and ["streets","houses","greenery","submerged","landscape"]</div> 
+
+#### Spatial Constrains (image-to-image)
+
+![](assets/result_pics/figure3_pre-image.png)
+
+![](assets/result_pics/figure3_spatial.png)
+
+![](assets/result_pics/figure3_spatial_heatmap.png)
+
+<div align="center">Prompt=f"A satellite image suffers from a flooding where buildings on the {position} are being flooded." Position takes from top-left, top-right, bottom-left and bottom-right.</div> 
+
+#### Building Damage Degree (image-to-image)
+
+![](assets/result_pics/figure3_pre-image.png)
+
+![](assets/result_pics/figure3_damage1.png)
+
+![](assets/result_pics/figure3_damage1_heatmap.png)
+
+<div align="center">Prompt=f"Buidings are {damage_degree} after a flooding." Damage_degree takes from no damaged, minor damaged, major damaged and destroyed.</div> 
+
+![](assets/result_pics/figure3_pre-image.png)
+
+![](assets/result_pics/figure3_damage2.png)
+
+![](assets/result_pics/figure3_damage2_heatmap.png)
+
+
+
+<div align="center">Prompt=f"Buidings are {damage_description} after a flooding." Damage_degree takes from (No Damage)"Undisturbed. No sign of water, structural or shingle damage, or burn marks.", (Minor Damage)"Building partially burnt, water surrounding structure, volcanic flow nearby, roof elements missing, or visible cracks.", (Major Damage) "Partial wall or roof collapse, encroaching volcanic flow, or surrounded by water/mud.",  and (Destroyed) "Scorched, completely collapsed, partially/completely covered with water/mud, or otherwise no longer present." Visualization is taken on word "buidings". This Joint Damage Scale descriptions on a four-level granularity scheme are taken from xBD.</div> 
+
+### References
+
+[1] J. Song, C. Meng, and S. Ermon, “Denoising Diffusion Implicit Models,” presented at the International Conference on Learning Representations, Oct. 2020. 
+
+[2] C. Meng *et al.*, “SDEdit: Guided Image Synthesis and Editing with Stochastic Differential Equations,” presented at the International Conference on Learning Representations, Oct. 2021. 
+
+[3] R. Tang *et al.*, “What the DAAM: Interpreting Stable Diffusion Using Cross Attention,” presented at the ACL 2023, A. Rogers, J. Boyd-Graber, and N. Okazaki, Eds., Toronto, Canada: Association for Computational Linguistics, Jul. 2023, pp. 5644–5659. doi: [10.18653/v1/2023.acl-long.310](https://doi.org/10.18653/v1/2023.acl-long.310).
+
 ## Agenda & Discussion Board
 
 ### July<sup>3rd</sup>
@@ -35,7 +129,6 @@ Problems and Solutions:
 - [x] Suggestions given by Prof. Zhang
 
 1. Estimate the model performance for current models ✔
-
 
 To-do List:
 
@@ -143,9 +236,9 @@ Note:
 
 DAAM method produces attribution maps of prompt on stable diffusion (the first to interpret large diffusion models from a visuolinguistic perspective).
 
->  [1] R. Tang et al., ‘What the DAAM: Interpreting Stable Diffusion Using Cross Attention’, presented at the ACL 2023, A. Rogers, J. Boyd-Graber, and N. Okazaki, Eds., Toronto, Canada: Association for Computational Linguistics, Jul. 2023, pp. 5644–5659. doi: 10.18653/v1/2023.acl-long.310.
+> [1] R. Tang et al., ‘What the DAAM: Interpreting Stable Diffusion Using Cross Attention’, presented at the ACL 2023, A. Rogers, J. Boyd-Graber, and N. Okazaki, Eds., Toronto, Canada: Association for Computational Linguistics, Jul. 2023, pp. 5644–5659. doi: 10.18653/v1/2023.acl-long.310.
 
-##### Remote Sensing Image Captioning State-of-the-art Model 
+##### Remote Sensing Image Captioning State-of-the-art Model
 
 [MG-Transformer](https://github.com/One-paper-luck/MG-Transformer) [2] and [PKG-Transformer](https://github.com/One-paper-luck/PKG-Transformer) [3] are supposed to be more suitable for remote sensing image captioning.
 
@@ -161,7 +254,7 @@ DAAM method produces attribution maps of prompt on stable diffusion (the first t
 
 <div align="center"><img src="./assets/discussion-img/DiffEdit_demos.png">In semantic image editing the goal is to modify an input image based on a textual query, while otherwise leaving the image as close as possible to the original. In our DIFFEDIT [4] approach, a mask generation module determines which part of the image should be edited, and an encoder infers the latents, to provide inputs to a text-conditional diffusion model which produces the image edit.<img src="./assets/discussion-img/DiffEdit_overview.png">The three steps of DIFFEDIT. Step 1: we add noise to the input image, and denoise it: once conditioned on the query text, and once conditioned on a reference text (or unconditionally). We derive a mask based on the difference in the denoising results. Step 2: we encode the input image with DDIM, to estimate the latents corresponding to the input image. Step 3: we perform DDIM decoding conditioned on the text query, using the inferred mask to replace the background with pixel values coming from the encoding process at the corresponding timestep.</div>
 
-> [4] G. Couairon, J. Verbeek, H. Schwenk, and M. Cord, ‘DiffEdit: Diffusion-based semantic image editing with mask guidance’, presented at the The Eleventh International Conference on Learning Representations, Sep. 2022. Accessed: Jul. 20, 2024. [Online]. Available: https://openreview.net/forum?id=3lge0p5o-M-
+> [4] G. Couairon, J. Verbeek, H. Schwenk, and M. Cord, ‘DiffEdit: Diffusion-based semantic image editing with mask guidance’, presented at the The Eleventh International Conference on Learning Representations, Sep. 2022. Accessed: Jul. 20, 2024. [Online]. Available: <https://openreview.net/forum?id=3lge0p5o-M->
 
 ##### [Overcome 77 tokens in Stable Diffusion (diffusers)](https://medium.com/@natsunoyuki/using-long-prompts-with-the-diffusers-package-with-prompt-embeddings-819657943050)
 
@@ -241,7 +334,7 @@ new_img = pipe(
 ```
 
 > [!IMPORTANT] Comment@Sakura
-> I think this solution works well that do little harm to diffusion model itself. Although, in this example, it is applied in the inference step, I suppose it be plausible in the training/fine-tuning step also!. 
+> I think this solution works well that do little harm to diffusion model itself. Although, in this example, it is applied in the inference step, I suppose it be plausible in the training/fine-tuning step also!.
 >
 > The reason why i think this long embedding is acceptable is that text embedding is fed into SD Encoder & Decoder block with cross-attention, so there is no worry how long it is. BUT, as stable diffusion is pretrained on text embedding no more than 77 tokens, we adopt longer prompt embedding in the further-training/fine-tuning step can be somehow less effective. Although, long prompt might distract the attention, where important prompt is not correctly noticed by model.
 
@@ -259,10 +352,19 @@ Also, as xBD [6] dataset only contains ~11k pre-event&post-event image pairs wit
 2. ~~Perform PCA on the set of RGB pixel values.~~ This method is also followed by AlexNet [9], but I do not recommend.
 3. Reuse the image pairs for training but with different prompt style. The first 11k pairs are using prompt generated by CogVLM2+T5 within 77 tokens. Then the following can be a) long prompt (200-300 tokens, using embedding techniques mentioned above for input) by CogVLM2 b) divided long prompt (200-300 tokens) into 3×normal prompt(<77tokens) c) captions generated by [MG-Transformer](https://github.com/One-paper-luck/MG-Transformer) [2] and [PKG-Transformer](https://github.com/One-paper-luck/PKG-Transformer) [3]
 
-> [6] R. Gupta *et al.*, ‘Creating xBD: A Dataset for Assessing Building Damage from Satellite Imagery’, in *Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops*, 2019, pp. 10–17. Accessed: Jun. 24, 2024. [Online]. Available: https://openaccess.thecvf.com/content_CVPRW_2019/html/cv4gc/Gupta_Creating_xBD_A_Dataset_for_Assessing_Building_Damage_from_Satellite_CVPRW_2019_paper.html
+> [6] R. Gupta *et al.*, ‘Creating xBD: A Dataset for Assessing Building Damage from Satellite Imagery’, in *Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops*, 2019, pp. 10–17. Accessed: Jun. 24, 2024. [Online]. Available: <https://openaccess.thecvf.com/content_CVPRW_2019/html/cv4gc/Gupta_Creating_xBD_A_Dataset_for_Assessing_Building_Damage_from_Satellite_CVPRW_2019_paper.html>
 >
-> [7] R. Rombach, A. Blattmann, D. Lorenz, P. Esser, and B. Ommer, ‘High-Resolution Image Synthesis With Latent Diffusion Models’, presented at the Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2022, pp. 10684–10695. Accessed: Jun. 29, 2024. [Online]. Available: https://openaccess.thecvf.com/content/CVPR2022/html/Rombach_High-Resolution_Image_Synthesis_With_Latent_Diffusion_Models_CVPR_2022_paper.html
+> [7] R. Rombach, A. Blattmann, D. Lorenz, P. Esser, and B. Ommer, ‘High-Resolution Image Synthesis With Latent Diffusion Models’, presented at the Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2022, pp. 10684–10695. Accessed: Jun. 29, 2024. [Online]. Available: <https://openaccess.thecvf.com/content/CVPR2022/html/Rombach_High-Resolution_Image_Synthesis_With_Latent_Diffusion_Models_CVPR_2022_paper.html>
 >
-> [8] C. Schuhmann *et al.*, ‘LAION-5B: An open large-scale dataset for training next generation image-text models’, in *Advances in Neural Information Processing Systems*, Dec. 2022, pp. 25278–25294. Accessed: Jul. 20, 2024. [Online]. Available: https://proceedings.neurips.cc/paper_files/paper/2022/hash/a1859debfb3b59d094f3504d5ebb6c25-Abstract-Datasets_and_Benchmarks.html
+> [8] C. Schuhmann *et al.*, ‘LAION-5B: An open large-scale dataset for training next generation image-text models’, in *Advances in Neural Information Processing Systems*, Dec. 2022, pp. 25278–25294. Accessed: Jul. 20, 2024. [Online]. Available: <https://proceedings.neurips.cc/paper_files/paper/2022/hash/a1859debfb3b59d094f3504d5ebb6c25-Abstract-Datasets_and_Benchmarks.html>
 >
-> [9] A. Krizhevsky, I. Sutskever, and G. E. Hinton, ‘ImageNet Classification with Deep Convolutional Neural Networks’, in *Neural Information Processing Systems*, Curran Associates, Inc., 2012. Accessed: Apr. 29, 2024. [Online]. Available: https://papers.nips.cc/paper_files/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html
+> [9] A. Krizhevsky, I. Sutskever, and G. E. Hinton, ‘ImageNet Classification with Deep Convolutional Neural Networks’, in *Neural Information Processing Systems*, Curran Associates, Inc., 2012. Accessed: Apr. 29, 2024. [Online]. Available: <https://papers.nips.cc/paper_files/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html>
+
+### August<sup>19th</sup>
+
+- Add [Keynote](lectures/Temporal_Image-to-Image_Generation.pptx) for Temporal Generation Techniques, see Keynote in [PDF](./lectures/Temporal_Image-to-Image_Generation.pdf)
+- Add [Keynote](lectures/Workflow_of_Image_Captioning_for_Disaster_RSIs.pptx) for Image Captioning for RSIs, see Keynote in [PDF](./lectures/Workflow_of_Image_Captioning_for_Disaster_RSIs.pdf)
+
+### August<sup>20th-23rd</sup>
+
+- Add Whole Project Keynote, see [PDF](./products/GFM4D-0826.pdf)
