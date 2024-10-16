@@ -35,7 +35,9 @@ Fine-tuned Model on SD2
 
 - BLIP-Diffusion: [salesforce/blipdiffusion · Hugging Face](https://huggingface.co/salesforce/blipdiffusion)
 
-  - ...
+  - fp16
+  - Text-to-image ✔
+  - Image-to-image （BLIP-Diffusion [5]）✔
 
 > [1] C. Meng *et al.*, ‘SDEdit: Guided Image Synthesis and Editing with Stochastic Differential Equations’, presented at the International Conference on Learning Representations, Oct. 2021. Accessed: Jul. 23, 2024. [Online]. Available: https://openreview.net/forum?id=aBsCjcPu_tE
 >
@@ -59,10 +61,48 @@ Fine-tuned Model on SD2
 
 ![](./assets/out/ablation_steps_t2i/ablation_experiment_results.png)
 
+```yaml
+# configs/config_steps_t2i.yaml
+
+models:
+  - name: "sd2"
+    path: "models/stabilityai/stable-diffusion-2-1"
+  - name: "sdxl"
+    path: "models/stabilityai/stable-diffusion-xl-base-1.0"
+  - name: "sd3"
+    path: "models/stabilityai/stable-diffusion-3-medium-diffusers"
+  - name: "diffusionsat"
+    path: "models/fsx/proj-satdiffusion/finetune_sd21_sn-satlas-fmow_snr5_md7norm_bs64"
+
+data:
+  output_folder: "out/ablation_steps_t2i"
+
+ablation_config:
+  inference_steps: [20,40,60,80,100]
+  height: 512
+  width: 512
+  guidance_scale: 7.0
+  prompt: "A satellite image of farmland suffering from severe flooding in India"
+  seed: 0
+
+logging:
+  log_file: "log/ablation_steps_t2i.log"
+
+```
+
+
+
 #### Inference Steps (image-to-image)
 
 ![](./assets/out/ablation_steps_i2i/ablation_experiment_results.png)
 
-#### Guidance Sacle
+#### Guidance Sacle (text-to-image)
 
-#### Image Size
+#### Guidance Sacle (image-to-image)
+
+#### Image Size (text-to-image)
+
+#### Image Size (image-to-image)
+
+#### Image to Image Techniques
+

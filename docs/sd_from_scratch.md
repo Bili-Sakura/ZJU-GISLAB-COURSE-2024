@@ -179,14 +179,23 @@ pip install -r requirements.txt
 2. Install more packages
 
     ```bash
-    conda install pytorch 
-    conda install torchvision
-    conda install torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
-    pip install transformers accelerate safetensors ipykernel tensorboard
-    pip install open_clip_torch
-    conda install -c conda-forge diffusers
+    conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+    
+    
     conda install xformers -c xformers
     conda install -c huggingface -c conda-forge datasets
+    # conda install -c conda-forge opencv
+    
+    pip install git+https://github.com/huggingface/transformers.git@v4.45.1
+    pip install accelerate safetensors ipykernel 
+    pip install streamlit tqdm
+    pip install open_clip_torch tensorboard
+    pip install --upgrade diffusers[torch]
+    pip install rasterio
+    pip install --upgrade vllm
+    pip install --upgrade mistral_common
+    pip install opencv-python
+    
     ```
 
 3. Install conda-pack to wrap up conda env from Windows to Linux
